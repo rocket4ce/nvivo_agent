@@ -7,11 +7,17 @@ defmodule NvivoAgent.Application do
 
   @impl true
   def start(_type, _args) do
+    # Build worker options from config
+    worker_options = NvivoAgent.LivekitConfig.build_worker_options()
+
     children = [
       NvivoAgentWeb.Telemetry,
       NvivoAgent.Repo,
       {DNSCluster, query: Application.get_env(:nvivo_agent, :dns_cluster_query) || :ignore},
       {Phoenix.PubSub, name: NvivoAgent.PubSub},
+      # Start LivekitexAgent WorkerSupervisor with proper config
+      # It will start its own infrastructure (ToolRegistry, WorkerManager, etc.)
+      {LivekitexAgent.WorkerSupervisor, worker_options},
       # Start a worker by calling: NvivoAgent.Worker.start_link(arg)
       # {NvivoAgent.Worker, arg},
       # Start to serve requests, typically the last entry
