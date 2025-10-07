@@ -7,6 +7,22 @@
 # General application configuration
 import Config
 
+config :livekitex_agent,
+  default_worker_options: [
+    # Worker management
+    worker_pool_size: 8,                    # Number of concurrent agent workers
+    max_concurrent_jobs: 100,               # Max simultaneous sessions
+
+    # Agent settings
+    agent_name: "dinko",         # Display name for your agent
+    server_url: "wss://127.0.0.1:7880",   # LiveKit server URL
+    api_key: "devkey",                # LiveKit API key
+    api_secret: "secret",          # LiveKit API secret
+
+    # Development options
+    log_level: :info,                        # Logging verbosity
+  ]
+
 config :nvivo_agent,
   ecto_repos: [NvivoAgent.Repo],
   generators: [timestamp_type: :utc_datetime]
